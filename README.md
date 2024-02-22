@@ -1,2 +1,1 @@
-# wdb
-Web Datenbeschaffung
+# wdb - Web Datenbeschaffung
