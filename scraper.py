@@ -48,7 +48,7 @@ def extract_player_stats(driver, team_name):
             EC.presence_of_element_located((By.XPATH, '//*[@id="stats_standard_9"]/tbody' ))
         )
 
-        header_row  = WebDriverWait(driver, 1).until(
+        header_row  = WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="stats_standard_9"]/thead/tr[2]')) 
         )
 
@@ -131,7 +131,7 @@ def click_previous_season_button(driver):
     except Exception as e:
         print("Error clicking previous season button: \n", e)
 
-def scrape_multiple_seasons(driver, base_url, num_seasons=6):
+def scrape_multiple_seasons(driver, base_url, num_seasons=4):
     """
     Scrapes player data for n=num_seasons seasons.
     """
@@ -161,5 +161,5 @@ def scrape_multiple_seasons(driver, base_url, num_seasons=6):
 
 if __name__ == "__main__":
     driver = initialize_driver()
-    scrape_multiple_seasons(driver, base_url, num_seasons=2)
+    scrape_multiple_seasons(driver, base_url, num_seasons=4)
     driver.quit()
