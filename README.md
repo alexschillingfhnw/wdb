@@ -43,3 +43,19 @@ This command starts the container where the scraping scripts are executed sequen
   Ensure that you have Jupyter installed, or use JupyterLab within Docker if preferred.
   
 ---
+
+## Why This is a Useful Project
+
+This project makes it easier to understand football by collecting data about Premier League matches and players using automated tools. It focuses on specific statistics that aren't usually highlighted, providing a different perspective that can be useful for anyone interested in football tactics and player performance.
+
+### Additional Information
+
+**Practical Applications:** The insights from this project are helpful for several areas such as team strategy, scouting, managing fantasy football teams, and writing about football. These insights are designed to help make informed decisions in these areas.
+
+**Future Plans:** There are plans to include cloud technologies to enhance the project. This might allow us to get even more detailed information and provide automated reports.
+
+**Ease of Use:** The project uses scripts that automatically collect and analyze data, which means you don't need to do the heavy lifting. This could be especially handy for people who need regularly updated football data.
+
+**Accessibility:** The project is set up in a way that can be expanded or adapted to other leagues or sports in the future, showing its flexibility.
+
+---
