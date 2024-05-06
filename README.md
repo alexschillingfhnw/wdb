@@ -14,6 +14,32 @@ The data is sourced from [FBref.com](https://fbref.com), a comprehensive footbal
 - **helper.py**: Includes Python functions that assist with data cleaning and plotting for analysis.
 - **scraper_matches.py**: Python script for scraping match statistics from FBref.com.
 - **scraper_players.py**: Python script for scraping player statistics from FBref.com.
+- **requirements.txt**: Includes all dependencies used for the scripts.
+- **dockerfile**: Docker configuration for setting up the environment and running the scripts.
 
+## Installation
+Before running the project, make sure you have Docker installed on your machine. If not, follow the instructions here to install Docker: [Get Docker](https://docs.docker.com/get-docker/).
 
+### Building the Docker Image
+Navigate to the project directory and build the Docker image using the following command:
+```bash
+docker build -t premier-league-data-scraper .
+```
+This command builds a Docker image named `premier-league-data-scraper` based on the instructions in the `Dockerfile`.
 
+### Running the Docker Container
+Once the image is built, run the container using:
+```bash
+docker run premier-league-data-scraper
+```
+This command starts the container where the scraping scripts are executed sequentially to collect data on match and player statistics from the Premier League.
+
+## Usage
+- **Data Collection**: The `scraper_matches.py` and `scraper_players.py` scripts will run automatically when the Docker container starts, scraping data from FBref.com.
+- **Data Analysis**: After data collection, run the Jupyter notebook for exploratory data analysis:
+  ```bash
+  jupyter notebook eda.ipynb
+  ```
+  Ensure that you have Jupyter installed, or use JupyterLab within Docker if preferred.
+  
+---
