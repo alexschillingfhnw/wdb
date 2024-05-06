@@ -154,7 +154,7 @@ def scrape_multiple_seasons(driver, base_url, num_seasons=4):
 
     # After all seasons are processed, save the combined data
     csv_filename = f"Premier_League_Player_Stats_Last_{num_seasons}_Seasons.csv"
-    all_seasons_data.to_csv(csv_filename, index=False)
+    all_seasons_data.to_csv("data/"+csv_filename, index=False)
     print(f"Player stats for the last {num_seasons} seasons saved to {csv_filename}")
 
 # -------- Main Execution ---------
