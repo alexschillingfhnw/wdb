@@ -4,19 +4,19 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time 
 import pandas as pd
-import threading
 
-base_url = "https://fbref.com/en/comps/9/Premier-League-Stats"
 
 def initialize_driver():
     driver = webdriver.Firefox()
     return driver
+
 
 def navigate_to_league_page(driver, url):
     """
     Navigates to the Premier League page on FBref.
     """
     driver.get(url)
+
 
 def get_season(driver):
     """
@@ -37,6 +37,7 @@ def get_season(driver):
         print("Error extracting season: \n", e)
         return None
 
+
 def extract_player_stats(driver, team_name):
     """
     Extracts player statistics from a given table.
@@ -55,6 +56,7 @@ def extract_player_stats(driver, team_name):
         headers = [th.text for th in header_row.find_elements(By.TAG_NAME, 'th')]
         player_rows = stats_table.find_elements(By.TAG_NAME, 'tr')
 
+        # Gather player data from each table row
         for row in player_rows:
             player_name = row.find_element(By.TAG_NAME, 'th').text
             player_stats = row.find_elements(By.TAG_NAME, 'td')
@@ -67,17 +69,6 @@ def extract_player_stats(driver, team_name):
 
     return headers, player_data
 
-def combine_and_save_season_data(season, all_teams_data):
-    """
-    Combines player data from all teams into a single DataFrame for a given season, and saves it as a CSV.
-    """
-    try:
-        combined_df = pd.concat(all_teams_data, ignore_index=True)
-        csv_filename = f"{season}_premier_league_player_stats.csv"
-        combined_df.to_csv(csv_filename, index=False)
-        print(f"Combined player stats for season {season} saved to {csv_filename}")
-    except Exception as e:
-        print(f"Error combining and saving data for season {season}: \n", e)
 
 def extract_teams(driver, season):
     """
@@ -91,6 +82,7 @@ def extract_teams(driver, season):
         )
         team_rows = league_table_body.find_elements(By.TAG_NAME, 'tr')
 
+        # Gather team names and urls from each table row
         for row in team_rows:
             url_element = row.find_element(By.CSS_SELECTOR, 'td[data-stat="team"] a')
             team_url = url_element.get_attribute('href')
@@ -104,6 +96,7 @@ def extract_teams(driver, season):
 
     return teams
 
+
 def process_team_data(driver, season, team_name, team_url):
     """
     Processes player data for a given team. Collects player stats for the given season and adds season and team as columns.
@@ -115,13 +108,18 @@ def process_team_data(driver, season, team_name, team_url):
     headers.insert(0, 'Season')
     headers.insert(1, 'Team')
 
+    # Add corresponding season and team name to the new columns
     for data in player_data:
         data.insert(0, season)
         data.insert(1, team_name)
 
     return team_name, headers, player_data
 
+
 def click_previous_season_button(driver):
+    """
+    Clicks the previous season button to navigate to the previous season's data to continue data extraction.
+    """
     try:
         prev_season_button = WebDriverWait(driver, 1).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="meta"]/div[2]/div/a[1]' ))
@@ -131,9 +129,10 @@ def click_previous_season_button(driver):
     except Exception as e:
         print("Error clicking previous season button: \n", e)
 
+
 def scrape_multiple_seasons(driver, base_url, num_seasons=4):
     """
-    Scrapes player data for n=num_seasons seasons.
+    Scrapes player data for n=num_seasons seasons and saves all the data to a csv file.
     """
     navigate_to_league_page(driver, base_url)
     all_seasons_data = pd.DataFrame()
@@ -157,9 +156,10 @@ def scrape_multiple_seasons(driver, base_url, num_seasons=4):
     all_seasons_data.to_csv("data/"+csv_filename, index=False)
     print(f"Player stats for the last {num_seasons} seasons saved to {csv_filename}")
 
-# -------- Main Execution ---------
 
+# -------- Main Execution ---------
 if __name__ == "__main__":
+    base_url = "https://fbref.com/en/comps/9/Premier-League-Stats"
     driver = initialize_driver()
     scrape_multiple_seasons(driver, base_url, num_seasons=4)
     driver.quit()
