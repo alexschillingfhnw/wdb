@@ -5,19 +5,19 @@ from selenium.webdriver.support import expected_conditions as EC
 import os
 import time 
 import pandas as pd
-import threading
 
-base_url = "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures"
 
 def initialize_driver():
     driver = webdriver.Firefox()
     return driver
+
 
 def navigate_to_page(driver, url):
     """
     Navigates to the given url page on FBref.
     """
     driver.get(url)
+
 
 def get_season(driver):
     """
@@ -41,8 +41,7 @@ def get_season(driver):
 
 def extract_match_reports(season, driver):
     """
-    Extracts all the match report URLs from the scores and fixtures page,
-    excluding links containing "Head to Head."
+    Extracts all the match report URLs from the scores and fixtures page, excluding links containing "Head to Head."
     """
     match_report_urls = []
 
@@ -52,11 +51,12 @@ def extract_match_reports(season, driver):
 
     fictures_table_rows = fictures_table.find_elements(By.TAG_NAME, 'tr')
 
+    # Extract match report url from each table row
     for row in fictures_table_rows: 
         try:
             link_element = row.find_element(By.CSS_SELECTOR, 'td[data-stat="match_report"] a')
 
-            # Check if the link text contains "Head to Head"
+            # Check if the link text contains "Head to Head" -> skip
             if "Head-to-Head" not in link_element.text:
                 match_report_url = link_element.get_attribute('href')
                 match_report_urls.append(match_report_url)
@@ -67,15 +67,10 @@ def extract_match_reports(season, driver):
 
     return match_report_urls
 
+
 def extract_match_data(driver, url, season):
     """
     Extracts the two team names, score, xG, date, and officials from the match report's scorebox using Selenium.
-
-    Args:
-        driver (WebDriver): An instance of a WebDriver (e.g., Firefox driver).
-
-    Returns:
-        dict: A dictionary containing the extracted match data.
     """
 
     driver.get(url)
@@ -164,7 +159,7 @@ def scrape_matches(driver, base_url, num_seasons=4):
         season = get_season(driver)
         match_report_urls = extract_match_reports(season, driver)
 
-        # Loop through the match report URLs
+        # Loop through the match report URLs to extract data from each match
         for url in match_report_urls:
             match_data = extract_match_data(driver, url, season)
 
@@ -183,9 +178,10 @@ def scrape_matches(driver, base_url, num_seasons=4):
 
     print(f"Collected head to head matches for the last {num_seasons} seasons.")
 
-# -------- Main Execution ---------
 
+# -------- Main Execution ---------
 if __name__ == "__main__":
+    base_url = "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures"
     driver = initialize_driver()
     scrape_matches(driver, base_url, num_seasons=6)
     driver.quit()
