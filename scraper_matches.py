@@ -80,115 +80,59 @@ def extract_match_data(driver, url, season):
 
     driver.get(url)
 
-    match_data = {}
-
     try:
-        scorebox = WebDriverWait(driver, 5).until(
+        scorebox = WebDriverWait(driver, 1).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="content"]/div[2]'))
         )
-        stats_table = WebDriverWait(driver, 5).until(
+        stats_table = WebDriverWait(driver, 1).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="team_stats"]/table'))
         )
-        extra_stats_div = WebDriverWait(driver, 5).until(
+        extra_stats_div = WebDriverWait(driver, 1).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="team_stats_extra"]'))
         )
-        stat_groups = extra_stats_div.find_elements(By.XPATH, './div')
+        stat_divs = extra_stats_div.find_elements(By.XPATH, './div')
 
-        # Team Names
-        team1_xpath = '//*[@id="content"]/div[2]/div[1]/div[1]/strong/a'
-        team2_xpath = '//*[@id="content"]/div[2]/div[2]/div[1]/strong/a'
-        team1 = scorebox.find_element(By.XPATH, team1_xpath).text.strip()
-        team2 = scorebox.find_element(By.XPATH, team2_xpath).text.strip()
-
-        # Score and xG
-        score_team1_xpath = '//*[@id="content"]/div[2]/div[1]/div[2]/div[1]'
-        score_team2_xpath = '//*[@id="content"]/div[2]/div[2]/div[2]/div[1]'
-        xg_team1_xpath = '//*[@id="content"]/div[2]/div[1]/div[2]/div[2]'
-        xg_team2_xpath = '//*[@id="content"]/div[2]/div[2]/div[2]/div[2]'
-        score_team1 = scorebox.find_element(By.XPATH, score_team1_xpath).text
-        score_team2 = scorebox.find_element(By.XPATH, score_team2_xpath).text
-        xg_team1 = scorebox.find_element(By.XPATH, xg_team1_xpath).text
-        xg_team2 = scorebox.find_element(By.XPATH, xg_team2_xpath).text
-
-        # Date
-        date_xpath = '//*[@id="content"]/div[2]/div[3]/div[1]/strong/a'
-        date = scorebox.find_element(By.XPATH, date_xpath).text.split(',')[0].strip()
-
-        time_xpath = '//*[@id="content"]/div[2]/div[3]/div[1]/span[1]'
-        time_str = scorebox.find_element(By.XPATH, time_xpath).text.strip()
+        date = scorebox.find_element(By.XPATH, '//*[@id="content"]/div[2]/div[3]/div[1]/strong/a').text.split(',')[0].strip()
+        time_str = scorebox.find_element(By.XPATH, '//*[@id="content"]/div[2]/div[3]/div[1]/span[1]').text.strip()
+        team1 = scorebox.find_element(By.XPATH, '//*[@id="content"]/div[2]/div[1]/div[1]/strong/a').text.strip()
+        team2 = scorebox.find_element(By.XPATH, '//*[@id="content"]/div[2]/div[2]/div[1]/strong/a').text.strip()
+        score_team1 = scorebox.find_element(By.XPATH, '//*[@id="content"]/div[2]/div[1]/div[2]/div[1]').text
+        score_team2 = scorebox.find_element(By.XPATH, '//*[@id="content"]/div[2]/div[2]/div[2]/div[1]').text
+        xg_team1 = scorebox.find_element(By.XPATH, '//*[@id="content"]/div[2]/div[1]/div[2]/div[2]').text
+        xg_team2 = scorebox.find_element(By.XPATH, '//*[@id="content"]/div[2]/div[2]/div[2]/div[2]').text
 
         try:
-            # Officials
             officials_xpath = '//*[@id="content"]/div[2]/div[3]/div[7]/small'
             officials_text = scorebox.find_element(By.XPATH, officials_xpath).text.strip()
             officials = [official.strip() for official in officials_text.split('·')]
         except:
-            # for season 2020/2021
             officials_xpath = '//*[@id="content"]/div[2]/div[3]/div[6]/small'
             officials_text = scorebox.find_element(By.XPATH, officials_xpath).text.strip()
             officials = [official.strip() for official in officials_text.split('·')]
 
-        # Possession
-        possession_team1_xpath = '//*[@id="team_stats"]/table/tbody/tr[3]/td[1]/div/div[1]/strong'
-        possession_team2_xpath = '//*[@id="team_stats"]/table/tbody/tr[3]/td[2]/div/div[1]/strong'
+        possession_team1 = stats_table.find_element(By.XPATH, '//*[@id="team_stats"]/table/tbody/tr[3]/td[1]/div/div[1]/strong').text
+        possession_team2 = stats_table.find_element(By.XPATH, '//*[@id="team_stats"]/table/tbody/tr[3]/td[2]/div/div[1]/strong').text
+        passing_acc_team1 = stats_table.find_element(By.XPATH, '//*[@id="team_stats"]/table/tbody/tr[5]/td[1]/div/div[1]/strong').text
+        passing_acc_team2 = stats_table.find_element(By.XPATH, '//*[@id="team_stats"]/table/tbody/tr[5]/td[2]/div/div[1]/strong').text
+        shots_target_team1 = stats_table.find_element(By.XPATH, '//*[@id="team_stats"]/table/tbody/tr[7]/td[1]/div/div[1]/strong').text
+        shots_target_team2 = stats_table.find_element(By.XPATH, '//*[@id="team_stats"]/table/tbody/tr[7]/td[2]/div/div[1]/strong').text
+        saves_team1 = stats_table.find_element(By.XPATH, '//*[@id="team_stats"]/table/tbody/tr[9]/td[1]/div/div[1]/strong').text
+        saves_team2 = stats_table.find_element(By.XPATH, '//*[@id="team_stats"]/table/tbody/tr[9]/td[2]/div/div[1]/strong').text
 
-        # Passing Accuracy
-        passing_acc_team1_xpath = '//*[@id="team_stats"]/table/tbody/tr[5]/td[1]/div/div[1]/strong'
-        passing_acc_team2_xpath = '//*[@id="team_stats"]/table/tbody/tr[5]/td[2]/div/div[1]/strong'
+        data = [season, date, time_str, team1, team2, score_team1, score_team2, xg_team1, xg_team2, officials, possession_team1, 
+                possession_team2, passing_acc_team1, passing_acc_team2, shots_target_team1, shots_target_team2, saves_team1, saves_team2
+        ]
+        keys = ['season', 'date', 'time', 'team1', 'team2', 'score_team1', 'score_team2', 'xg_team1', 'xg_team2', 'officials', 'possession_team1', 
+                'possession_team2', 'passing_acc_team1', 'passing_acc_team2', 'shots_target_team1', 'shots_target_team2', 'saves_team1', 'saves_team2'
+        ]
+        match_data = dict(zip(keys, data))
 
-        # Shots on Target
-        shots_target_team1_xpath = '//*[@id="team_stats"]/table/tbody/tr[7]/td[1]/div/div[1]/strong'
-        shots_target_team2_xpath = '//*[@id="team_stats"]/table/tbody/tr[7]/td[2]/div/div[1]/strong'
-
-        # Saves
-        saves_team1_xpath = '//*[@id="team_stats"]/table/tbody/tr[9]/td[1]/div/div[1]/strong'
-        saves_team2_xpath = '//*[@id="team_stats"]/table/tbody/tr[9]/td[2]/div/div[1]/strong'
-
-        # Extract the data
-        possession_team1 = stats_table.find_element(By.XPATH, possession_team1_xpath).text
-        possession_team2 = stats_table.find_element(By.XPATH, possession_team2_xpath).text
-        passing_acc_team1 = stats_table.find_element(By.XPATH, passing_acc_team1_xpath).text
-        passing_acc_team2 = stats_table.find_element(By.XPATH, passing_acc_team2_xpath).text
-        shots_target_team1 = stats_table.find_element(By.XPATH, shots_target_team1_xpath).text
-        shots_target_team2 = stats_table.find_element(By.XPATH, shots_target_team2_xpath).text
-        saves_team1 = stats_table.find_element(By.XPATH, saves_team1_xpath).text
-        saves_team2 = stats_table.find_element(By.XPATH, saves_team2_xpath).text
-
-        # Update the returned dictionary
-        match_data['season'] = season
-        match_data['date'] = date
-        match_data['time'] = time_str
-        match_data['team1'] = team1
-        match_data['team2'] = team2
-        match_data['score_team1'] = score_team1
-        match_data['score_team2'] = score_team2
-        match_data['xg_team1'] = xg_team1
-        match_data['xg_team2'] = xg_team2
-        match_data['officials'] = officials
-        match_data['possession_team1'] = possession_team1
-        match_data['possession_team2'] = possession_team2
-        match_data['passing_acc_team1'] = passing_acc_team1
-        match_data['passing_acc_team2'] = passing_acc_team2
-        match_data['shots_target_team1'] = shots_target_team1
-        match_data['shots_target_team2'] = shots_target_team2
-        match_data['saves_team1'] = saves_team1
-        match_data['saves_team2'] = saves_team2
-
-        # Add additional stats to the dictionary
-        for group in stat_groups:
-            stats = group.find_elements(By.XPATH, './/div')
-
-            for i in range(0, len(stats), 3): 
-                # Ignore header elements
-                if stats[i].text in [team1, team2] or stats[i].text.strip() in [' _team1', ' _team2']: 
-                    continue   # Skip to the next iteration
-
-                stat_name = stats[i + 1].text.lower()
-                stat_team1 = stats[i].text  
-                stat_team2 = stats[i + 2].text 
-
-                match_data[f'{stat_name}_team1'] = stat_team1
-                match_data[f'{stat_name}_team2'] = stat_team2
+        for div in stat_divs:
+            stats = div.find_elements(By.XPATH, './/div')
+            for i in range(0, len(stats), 3):  # Adjust loop to ensure correct indexing
+                stat_name = stats[i + 1].text.lower().replace(' ', '_')  # Central element for stat name
+                match_data[f'{stat_name}_team1'] = stats[i].text
+                match_data[f'{stat_name}_team2'] = stats[i + 2].text
 
         return match_data
 
@@ -230,7 +174,7 @@ def scrape_matches(driver, base_url, num_seasons=4):
             if match_data:
                 # Convert to DataFrame and save to CSV (appending)
                 pd.DataFrame([match_data.values()], columns=match_data.keys()) \
-                    .to_csv(csv_filename, mode='a', index=False, header=not os.path.exists(csv_filename))
+                    .to_csv(csv_filename, mode='a', index=False, header=not os.path.exists("data/"+csv_filename))
 
         navigate_to_page(driver, current_season)
         click_previous_season_button(driver)
@@ -243,5 +187,5 @@ def scrape_matches(driver, base_url, num_seasons=4):
 
 if __name__ == "__main__":
     driver = initialize_driver()
-    scrape_matches(driver, base_url, num_seasons=4)
+    scrape_matches(driver, base_url, num_seasons=6)
     driver.quit()
