@@ -14,6 +14,8 @@ The data is sourced from [FBref.com](https://fbref.com), a comprehensive footbal
 - **helper.py**: Includes Python functions that assist with data cleaning and plotting for analysis.
 - **scraper_matches.py**: Python script for scraping match statistics from FBref.com.
 - **scraper_players.py**: Python script for scraping player statistics from FBref.com.
+- **requirements.txt**: Includes all dependencies used for the scripts.
+- **dockerfile**: Enables to sequentially run the scripts.
 
 
 
