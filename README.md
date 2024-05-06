@@ -43,8 +43,3 @@ This command starts the container where the scraping scripts are executed sequen
   Ensure that you have Jupyter installed, or use JupyterLab within Docker if preferred.
   
 ---
-
-This README includes comprehensive setup and running instructions, making it easy for others to get the project up and running on their machines. It integrates the Docker setup into the project workflow, simplifying the process of data collection and analysis.
-
-
-
