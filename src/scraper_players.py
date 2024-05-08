@@ -3,17 +3,17 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time 
+import os
 import pandas as pd
-
 
 def initialize_driver():
     driver = webdriver.Firefox()
     return driver
 
 
-def navigate_to_league_page(driver, url):
+def navigate_to_page(driver, url):
     """
-    Navigates to the Premier League page on FBref.
+    Navigates to a given page on FBref.
     """
     driver.get(url)
 
@@ -130,11 +130,10 @@ def click_previous_season_button(driver):
         print("Error clicking previous season button: \n", e)
 
 
-def scrape_multiple_seasons(driver, base_url, num_seasons=4):
+def scrape_multiple_seasons(driver, num_seasons=4):
     """
     Scrapes player data for n=num_seasons seasons and saves all the data to a csv file.
     """
-    navigate_to_league_page(driver, base_url)
     all_seasons_data = pd.DataFrame()
 
     for _ in range(num_seasons):
@@ -146,20 +145,25 @@ def scrape_multiple_seasons(driver, base_url, num_seasons=4):
             team_name, headers, player_data = process_team_data(driver, season, team_name, team_url)
             all_seasons_data = pd.concat([all_seasons_data, pd.DataFrame(player_data, columns=headers)])
         
-        navigate_to_league_page(driver, current_season_page)
+        navigate_to_page(driver, current_season_page)
         click_previous_season_button(driver)
 
-        time.sleep(2)
+        time.sleep(1)
 
     # After all seasons are processed, save the combined data
     csv_filename = f"Premier_League_Player_Stats_Last_{num_seasons}_Seasons.csv"
-    all_seasons_data.to_csv("data/"+csv_filename, index=False)
-    print(f"Player stats for the last {num_seasons} seasons saved to {csv_filename}")
+
+    data_directory = "data"  # Change this to the name of your data directory if it's different
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(script_dir, "..", data_directory, csv_filename)
+    all_seasons_data.to_csv(csv_path, index=False)
+    print(f"Player stats for the last {num_seasons} seasons saved to {csv_path}")
 
 
 # -------- Main Execution ---------
 if __name__ == "__main__":
     base_url = "https://fbref.com/en/comps/9/Premier-League-Stats"
     driver = initialize_driver()
-    scrape_multiple_seasons(driver, base_url, num_seasons=4)
+    navigate_to_page(driver, base_url)
+    scrape_multiple_seasons(driver, base_url, num_seasons=1)
     driver.quit()

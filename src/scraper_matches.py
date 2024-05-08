@@ -169,7 +169,7 @@ def scrape_matches(driver, base_url, num_seasons=4):
             if match_data:
                 # Convert to DataFrame and save to CSV (appending)
                 pd.DataFrame([match_data.values()], columns=match_data.keys()) \
-                    .to_csv(csv_filename, mode='a', index=False, header=not os.path.exists("data/"+csv_filename))
+                    .to_csv(csv_filename, mode='a', index=False, header=not os.path.exists("../data/"+csv_filename))
 
         navigate_to_page(driver, current_season)
         click_previous_season_button(driver)
