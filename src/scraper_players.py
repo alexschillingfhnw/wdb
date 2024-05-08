@@ -165,5 +165,5 @@ if __name__ == "__main__":
     base_url = "https://fbref.com/en/comps/9/Premier-League-Stats"
     driver = initialize_driver()
     navigate_to_page(driver, base_url)
-    scrape_multiple_seasons(driver, base_url, num_seasons=1)
+    scrape_multiple_seasons(driver, num_seasons=6)
     driver.quit()
