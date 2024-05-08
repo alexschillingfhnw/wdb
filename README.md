@@ -6,16 +6,21 @@ This repository is dedicated to the extraction and analysis of football data, sp
 The data is sourced from [FBref.com](https://fbref.com), a comprehensive football statistics website, ensuring a rich dataset that encompasses various aspects of player performances and match outcomes.
 
 ## Contents
+- **src/**: Contains all the source code for the project.
+  - `scraper_matches.py`: Python script for scraping match statistics from FBref.com.
+  - `scraper_players.py`: Python script for scraping player statistics from FBref.com.
+  - `helper.py`: Includes Python functions that assist with data cleaning and plotting for analysis.
+  - `eda.ipynb`: Jupyter notebook containing exploratory data analysis that offers initial insights and visualizations of player and match statistics.
+- **docs/**: Contains documentation related to the project.
+  - `Peer-Review-Concept-FS23.pdf`: Details the objectives of the mini challenge and the criteria that should be followed for peer review.
+- **tests/**: Directory for test scripts to verify the functionality of the source code.
+  - `test_scrapers.py`: Example test file for testing the scraping scripts.
 - **data/**: A directory where scraped data files are stored.
+- **Dockerfile**: Configuration file for Docker that sets up the environment and runs the scripts.
+- **requirements.txt**: Lists all dependencies required by the project.
 - **.gitignore**: Specifies intentionally untracked files that Git should ignore.
-- **Peer-Review-Concept-FS23.pdf**: Details the objectives of the mini challenge and the criteria that should be followed for peer review.
-- **README.md**: Provides an overview of the project, setup instructions, and additional information.
-- **eda.ipynb**: Contains exploratory data analysis on the collected Premier League data, offering initial insights and visualizations of player and match statistics.
-- **helper.py**: Includes Python functions that assist with data cleaning and plotting for analysis.
-- **scraper_matches.py**: Python script for scraping match statistics from FBref.com.
-- **scraper_players.py**: Python script for scraping player statistics from FBref.com.
-- **requirements.txt**: Includes all dependencies used for the scripts.
-- **dockerfile**: Docker configuration for setting up the environment and running the scripts.
+
+---
 
 ## Installation
 Before running the project, make sure you have Docker installed on your machine. If not, follow the instructions here to install Docker: [Get Docker](https://docs.docker.com/get-docker/).
