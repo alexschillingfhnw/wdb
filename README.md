@@ -13,6 +13,7 @@ The data is sourced from [FBref.com](https://fbref.com), a comprehensive footbal
   - `eda.ipynb`: Jupyter notebook containing exploratory data analysis that offers initial insights and visualizations of player and match statistics.
 - **docs/**: Contains documentation related to the project.
   - `Peer-Review-Concept-FS23.pdf`: Details the objectives of the mini challenge and the criteria that should be followed for peer review.
+  - `Report.pdf`: Documents the main ideas of the implementation; data science aspects, relevancy to the real world, originality etc.
 - **tests/**: Directory for test scripts to verify the functionality of the source code.
   - `test_scrapers.py`: Example test file for testing the scraping scripts.
 - **data/**: A directory where scraped data files are stored.
