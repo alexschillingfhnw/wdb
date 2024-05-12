@@ -24,6 +24,8 @@ The data is sourced from [FBref.com](https://fbref.com), a comprehensive footbal
 ---
 
 ## Installation
+**Note: Docker file does not work, however here is the guide if it would function properly:**
+
 Before running the project, make sure you have Docker installed on your machine. If not, follow the instructions here to install Docker: [Get Docker](https://docs.docker.com/get-docker/).
 
 ### Building the Docker Image
