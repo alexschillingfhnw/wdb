@@ -18,6 +18,20 @@ def navigate_to_page(driver, url):
     driver.get(url)
 
 
+def click_accept_cookies_button(driver):
+    """
+    Clicks the accept cookies button on the page.
+    """
+    try:
+        accept_cookies_button = WebDriverWait(driver, 1).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="qc-cmp2-ui"]/div[2]/div/button[3]'))
+        )
+        accept_cookies_button.click()
+
+    except Exception as e:
+        print("Error clicking accept cookies button: \n", e)
+
+
 def get_season(driver):
     """
     Extracts the season from the page and saves it as a string.
@@ -29,7 +43,7 @@ def get_season(driver):
 
         season_text = h1_element.text
         season = season_text.split(" ")[0]
-        print("Season:", season)
+        print("------\nSeason:", season)
         
         return season
     
@@ -120,14 +134,27 @@ def click_previous_season_button(driver):
     """
     Clicks the previous season button to navigate to the previous season's data to continue data extraction.
     """
+    passed = False
+
     try:
-        prev_season_button = WebDriverWait(driver, 1).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="meta"]/div[2]/div/a[1]' ))
+        prev_season_button = WebDriverWait(driver, 2).until(
+            EC.presence_of_element_located((By.XPATH, '/html/body/div[3]/div[3]/div[1]/div[2]/div/a'))
         )
         prev_season_button.click()
+        passed = True
 
-    except Exception as e:
-        print("Error clicking previous season button: \n", e)
+    except Exception:
+        print("Error clicking previous season button")
+
+    if not passed:
+        try:
+            prev_season_button = WebDriverWait(driver, 2).until( 
+                EC.presence_of_element_located((By.XPATH, '/html/body/div[3]/div[3]/div[1]/div[2]/div/a[1]'))
+            )
+            prev_season_button.click()
+
+        except Exception:
+            print("Error clicking previous season button")
 
 
 def scrape_multiple_seasons(driver, num_seasons=4):
@@ -159,11 +186,11 @@ def scrape_multiple_seasons(driver, num_seasons=4):
     all_seasons_data.to_csv(csv_path, index=False)
     print(f"Player stats for the last {num_seasons} seasons saved to {csv_path}")
 
-
 # -------- Main Execution ---------
 if __name__ == "__main__":
     base_url = "https://fbref.com/en/comps/9/Premier-League-Stats"
     driver = initialize_driver()
     navigate_to_page(driver, base_url)
+    click_accept_cookies_button(driver)
     scrape_multiple_seasons(driver, num_seasons=6)
     driver.quit()

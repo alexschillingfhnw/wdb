@@ -19,6 +19,20 @@ def navigate_to_page(driver, url):
     driver.get(url)
 
 
+def click_accept_cookies_button(driver):
+    """
+    Clicks the decline cookies button on the page.
+    """
+    try:
+        decline_cookies_button = WebDriverWait(driver, 2).until(
+            EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div/div/div[2]/div/button[2]'))
+        )
+        decline_cookies_button.click()
+
+    except Exception as e:
+        print("Error clicking decline cookies button: \n", e)
+
+
 def get_season(driver):
     """
     Extracts the season from the page and saves it as a string.
@@ -30,7 +44,7 @@ def get_season(driver):
 
         season_text = h1_element.text
         season = season_text.split(" ")[0]
-        print("Season:", season)
+        print("------\nSeason:", season)
         
         return season
     
@@ -147,11 +161,11 @@ def click_previous_season_button(driver):
         print("Error clicking previous season button: \n", e)
 
 
-def scrape_matches(driver, base_url, num_seasons=4):
+def scrape_matches(driver, num_seasons=4):
     """
     Main function to scrape match reports from FBref.
     """
-    navigate_to_page(driver, base_url)
+    data_directory = "data"
     csv_filename = f"Premier_League_Match_Stats_Last_{num_seasons}_Seasons.csv"
 
     for _ in range(num_seasons):
@@ -167,14 +181,15 @@ def scrape_matches(driver, base_url, num_seasons=4):
 
             # Check if data was extracted successfully
             if match_data:
-                # Convert to DataFrame and save to CSV (appending)
+                # Convert to DataFrame and save to CSV
+                csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", data_directory, csv_filename)
                 pd.DataFrame([match_data.values()], columns=match_data.keys()) \
-                    .to_csv(csv_filename, mode='a', index=False, header=not os.path.exists("../data/"+csv_filename))
+                    .to_csv(csv_path, mode='a', index=False, header=not os.path.exists(csv_path))
 
         navigate_to_page(driver, current_season)
         click_previous_season_button(driver)
 
-        time.sleep(2)
+        time.sleep(3)
 
     print(f"Collected head to head matches for the last {num_seasons} seasons.")
 
@@ -183,5 +198,7 @@ def scrape_matches(driver, base_url, num_seasons=4):
 if __name__ == "__main__":
     base_url = "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures"
     driver = initialize_driver()
-    scrape_matches(driver, base_url, num_seasons=6)
+    navigate_to_page(driver, base_url)
+    click_accept_cookies_button(driver)
+    scrape_matches(driver, num_seasons=6)
     driver.quit()
